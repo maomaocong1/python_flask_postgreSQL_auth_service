@@ -9,9 +9,9 @@ from flask_jwt_extended import JWTManager, create_access_token, jwt_required, ge
 app = Flask(__name__)
 
 # Configuration using environment variables (Best Practice)
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL') or 'postgresql://username:passwordß@127.0.0.1/postgres'  # Fallback
-app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY') or 'your_secret_key' # Replace with a strong, randomly generated key and store it in environment variables
-app.config['JWT_SECRET_KEY'] = os.environ.get('JWT_SECRET_KEY') or 'your_jwt_secret_key' # Replace with a strong, randomly generated key and store it in environment variables
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL') or 'postgresql://username:password@127.0.0.1/postgres'  
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY') or 'your_secret_key' 
+app.config['JWT_SECRET_KEY'] = os.environ.get('JWT_SECRET_KEY') or 'your_jwt_secret_key'
 
 # Initialize extensions
 db = SQLAlchemy(app)
@@ -27,7 +27,7 @@ class User(db.Model):
     def __repr__(self): # For easier debugging
         return f"<User {self.username}>"
 
-# Create the database tables (better approach)
+# Create the database tables 
 @app.before_request
 def create_tables():
     with app.app_context(): # Essential for working with db outside of requests
@@ -85,8 +85,6 @@ def protected():
     return jsonify(logged_in_as=current_user), 200
 
 # Logout route (using JWT blacklist - more secure)
-# In a real application, you would store revoked tokens (e.g. in a database)
-# This is a simplified example
 blacklist = set()  # In real app, use a database
 @app.route('/logout', methods=['POST'])
 @jwt_required()
